@@ -1,7 +1,7 @@
 {
   "name": "catalogo-sublimacion",
   "productName": "Catalogo Sublimacion",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Catálogo de diseños de sublimación (Google Drive) con búsqueda por tema o código y pedidos en PDF por WhatsApp",
   "main": "main.js",
   "author": "Diana",

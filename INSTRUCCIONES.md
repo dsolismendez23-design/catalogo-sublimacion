@@ -1,10 +1,21 @@
 # Catálogo Sublimación — Guía rápida
 
 ## Instalar en la computadora (Windows)
-Ejecute `dist\CatalogoSublimacion-Instalador-1.1.0.exe` (crea ícono en el Escritorio).
-También está `dist\CatalogoSublimacion-Portable-1.1.0.exe`, que se abre sin instalar (sirve para llevar en una memoria USB).
+Ejecute `dist\CatalogoSublimacion-Instalador-1.2.0.exe` (crea ícono en el Escritorio).
+También está `dist\CatalogoSublimacion-Portable-1.2.0.exe`, que se abre sin instalar (sirve para llevar en una memoria USB).
 
-## Usar en el celular (sin internet de por medio para la app, sin publicar nada)
+## Celulares iPhone y Android: enlace publicado (recomendado)
+**https://dsolismendez23-design.github.io/catalogo-sublimacion/**
+
+- En la app de Windows: Configuración → **Copiar enlace**, y envíelo por WhatsApp a quien vaya a pedir.
+- **iPhone:** abrir el enlace en **Safari** → botón Compartir (cuadro con flecha) → **Agregar a pantalla de inicio**. Queda el ícono "Catálogo".
+- **Android:** abrir en **Chrome** → menú ⋮ → **Agregar a pantalla principal** (o **Instalar app**).
+- Hacer pedido → **Enviar por WhatsApp** → en el menú Compartir elegir WhatsApp y el chat: el PDF va adjunto.
+- **Se actualiza solo**: todos los días a las 5:00 a. m. GitHub lee el Google Drive y publica los diseños nuevos. Para actualizar al momento: en https://github.com/dsolismendez23-design/catalogo-sublimacion/actions → *Publicar catálogo* → **Run workflow**.
+- Si GitHub manda un correo diciendo que la tarea se desactivó, entre a esa misma página y presione **Enable workflow**.
+- Es público: cualquiera con el enlace ve el catálogo (las imágenes ya eran públicas en Drive). Los pedidos se guardan solo en cada celular; no quedan en GitHub.
+
+## Archivo para celular Android (sin publicar nada)
 El celular no puede abrir un .exe. La versión para celular es **un solo archivo**: `CatalogoSublimacion.html` (unos 0,7 MB), con la app y todo el catálogo adentro.
 
 1. En la app de la computadora: **Configuración → Generar archivo para celular**. Se crea en `Documentos\Catalogo Sublimacion celular\`.
@@ -16,7 +27,7 @@ El celular no puede abrir un .exe. La versión para celular es **un solo archivo
 - Las imágenes se ven con internet (datos o wifi), porque se toman del Google Drive.
 - Los diseños nuevos que suban a Drive **no** aparecen solos en el celular: genere el archivo otra vez en la computadora y reemplace el del celular.
 - Los pedidos hechos en el celular se guardan en el navegador del celular. Su numeración es independiente de la de la computadora.
-- **iPhone:** iOS no ejecuta archivos HTML guardados en el teléfono (la app Archivos solo los muestra como texto). Para usarla en iPhone habría que publicarla en internet.
+- **iPhone:** iOS no ejecuta archivos HTML guardados en el teléfono. En iPhone use el enlace publicado (sección anterior).
 
 ## De dónde salen los diseños
 Del Google Drive **CATALOGO MODATELAS**:
