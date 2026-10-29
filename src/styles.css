@@ -125,7 +125,6 @@ main { flex: 1; min-height: 0; }
 .pasos { padding-left: 20px; color: var(--suave); line-height: 1.6; }
 .pdf-arrastre { display: flex; align-items: center; gap: 12px; padding: 10px; border: 1px solid var(--borde); border-radius: 10px; background: var(--fondo); cursor: grab; margin: 10px 0; }
 .pdf-arrastre small { display: block; color: var(--suave); }
-.pdf-ico { width: 42px; height: 50px; border-radius: 4px; background: #d93a2b; color: #fff; font-weight: 800; font-size: 12px; display: grid; place-items: center; flex: none; }
 .giro { width: 34px; height: 34px; border: 4px solid var(--pri-claro); border-top-color: var(--pri); border-radius: 50%; margin: 6px auto; animation: giro 1s linear infinite; }
 @keyframes giro { to { transform: rotate(360deg); } }
 
@@ -206,3 +205,30 @@ body.modo-web .solo-escritorio { display: none !important; }
   .dialogo { padding: 16px; }
   .fila-botones button { flex: 1 1 auto; }
 }
+
+/* Varios clientes en un mismo pedido */
+.clientes-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.clientes-tabs:empty { display: none; }
+.cli-tab { display: inline-flex; align-items: center; gap: 4px; max-width: 100%; padding: 4px 4px 4px 10px; border-radius: 16px; border: 1px solid var(--borde); background: #fff; font-size: 12.5px; color: var(--texto); }
+.cli-tab .t { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px; }
+.cli-tab .n { font-size: 11px; color: var(--suave); }
+.cli-tab.activo { background: var(--pri); border-color: var(--pri); color: #fff; }
+.cli-tab.activo .n { color: #eadff2; }
+.cli-tab .x { border: none; background: none; color: inherit; opacity: .6; padding: 0 5px; font-size: 15px; line-height: 1; }
+.cli-tab .x:hover { opacity: 1; }
+.ancho { width: 100%; margin-bottom: 8px; }
+.ped-resumen { font-size: 12.5px; color: var(--suave); text-align: center; margin-bottom: 6px; }
+.ped-resumen:empty { display: none; }
+.suave { color: var(--suave); }
+
+/* Elegir PDF o Excel */
+.dialogo h3.neutro { color: var(--texto); }
+.formatos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 12px 0 14px; }
+.formato-btn { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 16px 8px; background: #fff; border: 2px solid var(--borde); border-radius: 12px; }
+.formato-btn:hover, .formato-btn.sugerido { border-color: var(--pri); background: var(--pri-claro); }
+.formato-btn b { font-size: 16px; }
+.formato-btn small { color: var(--suave); }
+.doc-ico { width: 42px; height: 50px; border-radius: 4px; color: #fff; font-weight: 800; font-size: 12px; display: grid; place-items: center; flex: none; }
+.doc-ico.pdf { background: #d93a2b; }
+.doc-ico.xlsx { background: #1f7a45; }
+.pdf-arrastre small { display: block; }

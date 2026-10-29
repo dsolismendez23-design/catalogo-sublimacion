@@ -3,7 +3,6 @@ const { execFile } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 const drive = require('./drive');
-const { htmlPedido } = require('./pdf');
 const { generarMovil } = require('./movil');
 
 // Datos de la app (AppData\Roaming\Catalogo Sublimacion): índice del catálogo, configuración, pedidos y miniaturas
@@ -63,7 +62,7 @@ function registrarMiniaturas() {
     if (!/^[\w-]+$/i.test(id)) return new Response('', { status: 400 });
     try {
       const buf = await miniatura(id, sz);
-      return new Response(buf, { headers: { 'content-type': 'image/jpeg' } });
+      return new Response(buf, { headers: { 'content-type': 'image/jpeg', 'access-control-allow-origin': '*' } });
     } catch {
       return new Response('', { status: 404 });
     }
@@ -91,38 +90,9 @@ function actualizarCatalogo(win) {
 }
 
 // ---------- Pedidos ----------
-function nombreArchivo(txt) {
-  return String(txt).replace(/[\\/:*?"<>|]+/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 60);
-}
+// La pantalla arma el archivo (PDF o Excel, src/documentos.js); aquí solo se guarda, se copia y se abre WhatsApp.
 
-async function crearPDF(pedido) {
-  const imagenes = {};
-  await Promise.all(pedido.items.map(async (it) => {
-    try { imagenes[it.id] = 'data:image/jpeg;base64,' + (await miniatura(it.id, 400)).toString('base64'); }
-    catch { imagenes[it.id] = null; }
-  }));
-  const html = htmlPedido(pedido, imagenes, leerConfig().negocio);
-  const tmp = path.join(DATOS, 'pedido_tmp.html');
-  fs.writeFileSync(tmp, html, 'utf-8');
-  const w = new BrowserWindow({ show: false });
-  try {
-    await w.loadFile(tmp);
-    const pdf = await w.webContents.printToPDF({
-      pageSize: 'Letter', printBackground: true,
-      margins: { top: 0.4, bottom: 0.4, left: 0.4, right: 0.4 },
-    });
-    fs.mkdirSync(DIR_PDF, { recursive: true });
-    const file = path.join(DIR_PDF,
-      `Pedido ${String(pedido.numero).padStart(4, '0')} - ${nombreArchivo(pedido.cliente)} - ${pedido.fecha.slice(0, 10)}.pdf`);
-    fs.writeFileSync(file, pdf);
-    return file;
-  } finally {
-    w.destroy();
-    fs.rmSync(tmp, { force: true });
-  }
-}
-
-// Copia el PDF al portapapeles como archivo (igual que "Copiar" en el Explorador) para pegarlo en WhatsApp con Ctrl+V
+// Copia el archivo al portapapeles (igual que "Copiar" en el Explorador) para pegarlo en WhatsApp con Ctrl+V
 function copiarArchivo(file) {
   return new Promise((resolve) => {
     const ps = `Set-Clipboard -LiteralPath '${file.replace(/'/g, "''")}'`;
@@ -131,25 +101,9 @@ function copiarArchivo(file) {
   });
 }
 
-function textoWhatsApp(p) {
-  const lineas = [
-    `*PEDIDO #${String(p.numero).padStart(4, '0')}*`,
-    `Cliente: ${p.cliente}`,
-    p.telefono ? `Teléfono: ${p.telefono}` : null,
-    `Fecha: ${new Date(p.fecha).toLocaleString('es-CR')}`,
-    `Diseños: ${p.items.length} · Unidades: ${p.items.reduce((s, i) => s + i.cantidad, 0)}`,
-    '',
-    ...p.items.map((i) => `• ${i.codigo} x${i.cantidad} (${i.ruta.join(' / ')})`),
-    p.notas ? `\nNotas: ${p.notas}` : null,
-    '',
-    'Adjunto el PDF del pedido.',
-  ];
-  return lineas.filter((l) => l !== null).join('\n');
-}
-
-async function abrirWhatsApp(p) {
-  const numero = String(leerConfig().whatsapp || '').replace(/\D/g, '');
-  const texto = encodeURIComponent(textoWhatsApp(p));
+async function abrirWhatsApp(textoPlano) {
+  const numero = String(leerConfig().whatsapp || '').replace(/D/g, '');
+  const texto = encodeURIComponent(textoPlano || '');
   // WhatsApp de escritorio si está instalado; si no, WhatsApp Web en el navegador
   if (app.getApplicationNameForProtocol('whatsapp://')) {
     await shell.openExternal(`whatsapp://send?${numero ? `phone=${numero}&` : ''}text=${texto}`);
@@ -211,59 +165,62 @@ ipcMain.handle('config:guardar', (_e, cambios) => {
 
 ipcMain.handle('pedidos:leer', () => leerJSON(ARCH_PEDIDOS, { consecutivo: 0, lista: [] }).lista);
 
-ipcMain.handle('pedidos:hacer', async (_e, datos) => {
+// Le da número y fecha al pedido (con todos sus clientes) y lo guarda en el historial
+ipcMain.handle('pedidos:registrar', (_e, clientes) => {
   const reg = leerJSON(ARCH_PEDIDOS, { consecutivo: 0, lista: [] });
-  const pedido = {
-    numero: reg.consecutivo + 1,
-    fecha: new Date().toISOString(),
-    cliente: String(datos.cliente || '').trim(),
-    telefono: String(datos.telefono || '').trim(),
-    notas: String(datos.notas || '').trim(),
-    items: datos.items.map((i) => ({
-      id: i.id, codigo: i.codigo, nombre: i.nombre || '', ruta: i.ruta, cantidad: Math.max(1, parseInt(i.cantidad, 10) || 1),
-    })),
-  };
-  if (!pedido.cliente) throw new Error('Falta el nombre');
-  if (!pedido.items.length) throw new Error('El pedido no tiene diseños');
-  pedido.pdf = await crearPDF(pedido);
+  const pedido = { numero: reg.consecutivo + 1, fecha: new Date().toISOString(), clientes, archivos: {} };
   reg.consecutivo = pedido.numero;
   reg.lista.unshift(pedido);
   guardarJSON(ARCH_PEDIDOS, reg);
-  const copiado = await copiarArchivo(pedido.pdf);
-  const via = await abrirWhatsApp(pedido);
-  return { pedido, copiado, via };
+  return pedido;
 });
 
 function buscarPedido(numero) {
   return leerJSON(ARCH_PEDIDOS, { lista: [] }).lista.find((p) => p.numero === numero);
 }
-ipcMain.handle('pedidos:enviar', async (_e, numero) => {
+function archivoDe(numero, formato) {
   const p = buscarPedido(numero);
-  if (!p) throw new Error('Pedido no encontrado');
-  if (!fs.existsSync(p.pdf)) p.pdf = await crearPDF(p);
-  const copiado = await copiarArchivo(p.pdf);
-  const via = await abrirWhatsApp(p);
+  const f = p?.archivos?.[formato] || (formato === 'pdf' ? p?.pdf : null); // p.pdf: pedidos de la versión 1.x
+  return f && fs.existsSync(f) ? f : null;
+}
+
+// Guarda el archivo en DocumentosPedidos Sublimacion; con enviar=true además lo copia y abre WhatsApp
+ipcMain.handle('pedidos:guardarDoc', async (_e, { numero, formato, nombre, bytes, texto, enviar }) => {
+  fs.mkdirSync(DIR_PDF, { recursive: true });
+  const file = path.join(DIR_PDF, path.basename(nombre));
+  fs.writeFileSync(file, Buffer.from(bytes));
+  const reg = leerJSON(ARCH_PEDIDOS, { consecutivo: 0, lista: [] });
+  const p = reg.lista.find((x) => x.numero === numero);
+  if (p) { p.archivos = { ...p.archivos, [formato]: file }; p.texto = texto; guardarJSON(ARCH_PEDIDOS, reg); }
+  if (!enviar) { await shell.openPath(file); return { archivo: nombre }; }
+  const copiado = await copiarArchivo(file);
+  const via = await abrirWhatsApp(texto);
+  return { archivo: nombre, copiado, via };
+});
+ipcMain.handle('pedidos:copiar', async (_e, numero, formato) => {
+  const f = archivoDe(numero, formato);
+  return f ? copiarArchivo(f) : false;
+});
+ipcMain.handle('pedidos:reenviar', async (_e, numero, formato) => {
+  const f = archivoDe(numero, formato);
+  const copiado = f ? await copiarArchivo(f) : false;
+  const via = await abrirWhatsApp(buscarPedido(numero)?.texto);
   return { copiado, via };
 });
-ipcMain.handle('pedidos:copiar', async (_e, numero) => {
-  const p = buscarPedido(numero);
-  return p && fs.existsSync(p.pdf) ? copiarArchivo(p.pdf) : false;
+ipcMain.handle('pedidos:abrir', (_e, numero, formato) => {
+  const f = archivoDe(numero, formato);
+  return f ? shell.openPath(f) : 'No se encontró el archivo';
 });
-ipcMain.handle('pedidos:abrirPDF', (_e, numero) => {
-  const p = buscarPedido(numero);
-  if (p && fs.existsSync(p.pdf)) return shell.openPath(p.pdf);
-  return 'No se encontró el PDF';
-});
-ipcMain.handle('pedidos:mostrarPDF', (_e, numero) => {
-  const p = buscarPedido(numero);
-  if (p && fs.existsSync(p.pdf)) shell.showItemInFolder(p.pdf);
+ipcMain.handle('pedidos:carpeta', (_e, numero, formato) => {
+  const f = numero ? archivoDe(numero, formato || 'pdf') || archivoDe(numero, 'xlsx') : null;
+  if (f) shell.showItemInFolder(f);
   else { fs.mkdirSync(DIR_PDF, { recursive: true }); shell.openPath(DIR_PDF); }
 });
-// Arrastrar el PDF desde la app hasta la conversación de WhatsApp
-ipcMain.on('pedidos:arrastrar', (e, numero) => {
-  const p = buscarPedido(numero);
-  if (!p || !fs.existsSync(p.pdf)) return;
-  e.sender.startDrag({ file: p.pdf, icon: nativeImage.createFromPath(path.join(__dirname, 'build', 'pdf.png')) });
+// Arrastrar el archivo desde la app hasta la conversación de WhatsApp
+ipcMain.on('pedidos:arrastrar', (e, numero, formato) => {
+  const f = archivoDe(numero, formato);
+  if (!f) return;
+  e.sender.startDrag({ file: f, icon: nativeImage.createFromPath(path.join(__dirname, 'build', formato === 'xlsx' ? 'xlsx.png' : 'pdf.png')) });
 });
 
 // Versión para celular: un solo HTML en Documentos\Catalogo Sublimacion celular

@@ -1,8 +1,8 @@
 # Catálogo Sublimación — Guía rápida
 
 ## Instalar en la computadora (Windows)
-Ejecute `dist\CatalogoSublimacion-Instalador-1.2.0.exe` (crea ícono en el Escritorio).
-También está `dist\CatalogoSublimacion-Portable-1.2.0.exe`, que se abre sin instalar (sirve para llevar en una memoria USB).
+Ejecute `dist\CatalogoSublimacion-Instalador-1.3.0.exe` (crea ícono en el Escritorio).
+También está `dist\CatalogoSublimacion-Portable-1.3.0.exe`, que se abre sin instalar (sirve para llevar en una memoria USB).
 
 ## Celulares iPhone y Android: enlace publicado (recomendado)
 **https://dsolismendez23-design.github.io/catalogo-sublimacion/**
@@ -46,17 +46,23 @@ Las miniaturas que ya se vieron quedan guardadas en la computadora y cargan más
 - **Por tema**: elija el tema en la lista de la izquierda o escriba la palabra (`navidad`, `mickey`, `almohadones`). Se pueden combinar: elija un tema y busque dentro de él.
 - Haga clic en una imagen para verla grande. Con las flechas ‹ › pasa a la siguiente, y **Ver original** la abre en Drive.
 
-## Hacer un pedido
-1. Escriba el **Nombre** (obligatorio). El teléfono y las notas son opcionales.
-2. Presione **+ Agregar** en cada diseño. En el panel de la derecha ajusta la cantidad o quita diseños.
-3. Presione **Hacer pedido**. La app:
-   - genera el PDF con número consecutivo, las imágenes, los códigos, los temas y las cantidades;
-   - lo guarda en `Documentos\Pedidos Sublimacion`;
-   - lo deja **copiado** en el portapapeles;
-   - abre WhatsApp con el resumen del pedido ya escrito.
-4. En el chat de WhatsApp presione **Ctrl + V** para pegar el PDF (o arrástrelo desde la ventana de la app) y luego **Enviar**.
+## Hacer un pedido (uno o varios clientes)
+1. Escriba el **Nombre del cliente** (obligatorio). El teléfono y las notas son opcionales.
+2. Presione **+ Agregar** en cada diseño. En el panel del pedido ajusta la cantidad o quita diseños.
+3. ¿Hay otro cliente en el mismo envío? Presione **+ Agregar otro cliente**: queda guardado el anterior y el panel se limpia para el siguiente. Repítalo las veces que quiera.
+   - Arriba del panel aparece una pestaña por cliente (ej. *1. María (2)*). Tocándola vuelve a ese cliente para cambiar sus diseños o cantidades; con la **×** se quita del pedido.
+   - Las marcas "✓ En el pedido" del catálogo son las del cliente que está abierto.
+4. Presione **Enviar pedido** y elija el formato:
+   - **PDF**: para ver e imprimir. Trae cada cliente con sus imágenes y, al final, el resumen con el total de cada cliente y el total general.
+   - **Excel**: para editar y sumar. Hoja *Pedido* (cada cliente con imágenes y su total), hoja *Resumen* (diseños y unidades por cliente) y hoja *Detalle* (todas las líneas en una tabla con filtros).
+   La app recuerda el último formato elegido y lo resalta la próxima vez.
+5. Un solo archivo lleva a todos los clientes. La app:
+   - le pone número consecutivo y lo guarda en `Documentos\Pedidos Sublimacion`;
+   - en Windows lo deja **copiado** y abre WhatsApp con el resumen de cada cliente: en el chat presione **Ctrl + V** y **Enviar**;
+   - en el celular muestra **Enviar por WhatsApp**: elija WhatsApp en el menú Compartir y el archivo va adjunto.
 
 WhatsApp no deja que otro programa envíe archivos solo: el último clic de Enviar siempre lo hace la persona.
+En **Pedidos hechos**, *Abrir* y *Enviar por WhatsApp* vuelven a preguntar el formato, así que un pedido hecho en PDF se puede mandar después en Excel (o al revés).
 
 ## Configuración
 - **Número de WhatsApp** que recibe los pedidos, con código de país (ej. `506 8888 8888`). Si se deja vacío, WhatsApp se abre para que usted elija el contacto.
@@ -71,4 +77,4 @@ Lista de todos los pedidos, con búsqueda por nombre, número o código. Desde a
 
 ## Para programar
 `npm start` abre la app; `npm run dist` genera los .exe en `dist\`; `npm run movil` genera `celular\CatalogoSublimacion.html` con el catálogo guardado (`npm run movil -- --drive` lo lee del Drive primero).
-El código de la pantalla (`src\`) es el mismo para las dos versiones: en Windows lo conecta `preload.js` y en el celular `src\api-web.js` (catálogo incrustado, PDF con jsPDF, Compartir del navegador). `movil.js` mete todo en un solo HTML.
+El código de la pantalla (`src\`) es el mismo para las dos versiones: en Windows lo conecta `preload.js` y en el celular `src\api-web.js` (catálogo incrustado, Compartir del navegador). El PDF (jsPDF) y el Excel (ExcelJS) los arma `src\documentos.js` en las dos versiones; Windows solo guarda el archivo, lo copia y abre WhatsApp. `movil.js` mete todo en un solo HTML.

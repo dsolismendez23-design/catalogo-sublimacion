@@ -51,18 +51,19 @@ const MANIFIESTO = {
 function generarMovil(catalogo, archivoDestino, opciones = {}) {
   if (!catalogo?.disenos?.length) throw new Error('Todavía no hay catálogo: presione "Actualizar catálogo" primero');
   const datos = JSON.stringify(catalogoCompacto(catalogo)).replace(/</g, '\\u003c');
-  const scripts = [
-    `<script>${seguro(leer('vendor/jspdf.umd.min.js'))}</script>`,
+  // Antes de app.js van el catálogo y api-web.js, que en Windows reemplaza preload.js
+  const antesDeApp = [
     `<script>window.CATALOGO_EMBEBIDO=${datos};window.CATALOGO_PUBLICADO=${!!opciones.web};</script>`,
     `<script>${seguro(leer('api-web.js'))}</script>`,
-    `<script>${seguro(leer('app.js'))}</script>`,
   ].join('\n');
 
   // Se usan funciones en replace() para que los "$" del código no se tomen como patrones
   const html = leer('index.html')
     .replace(/<meta http-equiv="Content-Security-Policy"[^>]*>\s*/, () => '')
     .replace('<link rel="stylesheet" href="styles.css">', () => (opciones.web ? CABECERA_WEB + '\n  ' : '') + `<style>${leer('styles.css')}</style>`)
-    .replace('<script src="app.js"></script>', () => scripts);
+    .replace('<script src="app.js"></script>', () => antesDeApp + '\n<script src="app.js"></script>')
+    // Cada <script src> (jsPDF, ExcelJS, documentos.js, app.js) se mete dentro del archivo
+    .replace(/<script src="([^"]+)"><\/script>/g, (_, f) => `<script>${seguro(leer(f))}</script>`);
 
   const dir = path.dirname(archivoDestino);
   fs.mkdirSync(dir, { recursive: true });

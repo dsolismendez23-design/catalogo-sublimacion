@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#7b3fa0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' miniatura: data:; style-src 'self' 'unsafe-inline'; script-src 'self'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' miniatura: data: blob:; connect-src 'self' miniatura:; style-src 'self' 'unsafe-inline'; script-src 'self'">
   <title>Catálogo Sublimación</title>
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -50,8 +50,9 @@
 
       <aside class="pedido">
         <h2>Pedido <button class="cerrar-panel movil-solo" data-cerrar-panel>×</button></h2>
-        <label>Nombre <span class="req">*</span>
-          <input id="pedCliente" type="text" placeholder="Nombre de quien pide" autocomplete="off">
+        <div id="clientesTabs" class="clientes-tabs"></div>
+        <label>Nombre del cliente <span class="req">*</span>
+          <input id="pedCliente" type="text" placeholder="Nombre del cliente" autocomplete="off">
         </label>
         <label>Teléfono (opcional)
           <input id="pedTelefono" type="text" autocomplete="off">
@@ -61,7 +62,9 @@
         <label>Notas (opcional)
           <textarea id="pedNotas" rows="2"></textarea>
         </label>
-        <button id="btnHacerPedido" class="pri grande">Hacer pedido</button>
+        <button id="btnOtroCliente" class="sec ancho">+ Agregar otro cliente</button>
+        <div id="pedResumen" class="ped-resumen"></div>
+        <button id="btnHacerPedido" class="pri grande">Enviar pedido</button>
       </aside>
       <div id="velo" class="velo" data-cerrar-panel></div>
       <button id="btnVerPedido" class="pri movil-solo flotante">Pedido (0)</button>
@@ -75,7 +78,7 @@
           <input id="buscarPedido" type="search" placeholder="Buscar por nombre, n.º de pedido o código…">
         </div>
         <table class="tabla">
-          <thead><tr><th>N.º</th><th>Fecha</th><th>Nombre</th><th>Diseños</th><th>Unidades</th><th></th></tr></thead>
+          <thead><tr><th>N.º</th><th>Fecha</th><th>Clientes</th><th>Diseños</th><th>Unidades</th><th></th></tr></thead>
           <tbody id="tablaPedidos"></tbody>
         </table>
         <div id="sinPedidos" class="vacio oculto">Todavía no hay pedidos.</div>
@@ -99,7 +102,7 @@
         </label>
         <div class="fila-botones">
           <button id="cfgGuardar" class="pri">Guardar</button>
-          <button id="cfgCarpetaPDF" class="sec solo-escritorio">Abrir carpeta de PDFs</button>
+          <button id="cfgCarpetaPDF" class="sec solo-escritorio">Abrir carpeta de pedidos</button>
         </div>
         <div class="caja-movil solo-escritorio">
           <h3>Enlace para celulares (iPhone y Android)</h3>
@@ -137,25 +140,38 @@
     </div>
   </div>
 
+  <!-- Formato del archivo -->
+  <div id="formato" class="modal oculto">
+    <div class="dialogo chico">
+      <h3 class="neutro">¿En qué formato envía el pedido?</h3>
+      <p id="formatoResumen" class="suave"></p>
+      <div class="formatos">
+        <button data-formato="pdf" class="formato-btn"><span class="doc-ico pdf">PDF</span><b>PDF</b><small>Para ver e imprimir</small></button>
+        <button data-formato="xlsx" class="formato-btn"><span class="doc-ico xlsx">XLS</span><b>Excel</b><small>Para editar y sumar</small></button>
+      </div>
+      <div class="fila-botones derecha"><button data-cancelar class="sec">Cancelar</button></div>
+    </div>
+  </div>
+
   <!-- Pedido listo -->
   <div id="listo" class="modal oculto">
     <div class="dialogo">
       <h3>✔ Pedido <span id="listoNum"></span> creado</h3>
       <p id="listoTexto"></p>
       <div id="listoPDF" class="pdf-arrastre">
-        <div class="pdf-ico">PDF</div>
-        <div><b id="listoArchivo"></b><small class="solo-escritorio">Puede arrastrar este archivo a la conversación de WhatsApp</small></div>
+        <div id="listoIco" class="doc-ico pdf">PDF</div>
+        <div><b id="listoArchivo"></b><small class="solo-escritorio">Puede arrastrar este archivo a la conversación de WhatsApp</small><small id="listoClientes"></small></div>
       </div>
       <ol class="pasos" id="listoPasos">
         <li>En WhatsApp, abra la conversación (ya va el resumen escrito).</li>
-        <li>Presione <b>Ctrl + V</b> en el chat para pegar el PDF, o arrástrelo desde aquí.</li>
+        <li>Presione <b>Ctrl + V</b> en el chat para pegar el archivo, o arrástrelo desde aquí.</li>
         <li>Presione <b>Enviar</b>.</li>
       </ol>
       <div class="fila-botones">
         <button id="listoCompartir" class="pri grande solo-web">Enviar por WhatsApp</button>
-        <button id="listoAbrir" class="sec">Ver PDF</button>
-        <button id="listoDescargar" class="sec solo-web">Descargar PDF</button>
-        <button id="listoCopiar" class="sec solo-escritorio">Copiar PDF otra vez</button>
+        <button id="listoAbrir" class="sec">Abrir archivo</button>
+        <button id="listoDescargar" class="sec solo-web">Descargar</button>
+        <button id="listoCopiar" class="sec solo-escritorio">Copiar archivo otra vez</button>
         <button id="listoWhats" class="sec solo-escritorio">Abrir WhatsApp otra vez</button>
         <button data-cerrar class="pri">Listo</button>
       </div>
@@ -173,9 +189,12 @@
     </div>
   </div>
 
-  <div id="espera" class="modal oculto"><div class="dialogo chico centro"><div class="giro"></div><p id="esperaTexto">Generando PDF…</p></div></div>
+  <div id="espera" class="modal oculto"><div class="dialogo chico centro"><div class="giro"></div><p id="esperaTexto">Generando el archivo…</p></div></div>
   <div id="toast" class="toast"></div>
 
+  <script src="vendor/jspdf.umd.min.js"></script>
+  <script src="vendor/exceljs.min.js"></script>
+  <script src="documentos.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
