@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#7b3fa0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' miniatura: data:; style-src 'self' 'unsafe-inline'; script-src 'self'">
+  <title>Catálogo Sublimación</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="barra">
+    <div class="marca">
+      <div class="logo">S</div>
+      <div><b>Catálogo Sublimación</b><small id="estadoCatalogo">Cargando…</small></div>
+    </div>
+    <div class="buscador">
+      <input id="buscar" type="search" placeholder="Buscar código o tema (ej. 5050, navidad)…" autocomplete="off">
+    </div>
+    <nav class="pestanas">
+      <button data-vista="catalogo" class="activa">Catálogo</button>
+      <button data-vista="pedidos">Pedidos hechos</button>
+      <button data-vista="config">Configuración</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- CATÁLOGO -->
+    <section id="vista-catalogo" class="vista activa">
+      <aside class="temas">
+        <div class="temas-tit">Temas <button class="cerrar-panel movil-solo" data-cerrar-panel>×</button></div>
+        <div id="arbol"></div>
+        <div class="temas-pie">
+          <button id="btnActualizar" class="sec solo-escritorio">⟳ Actualizar catálogo</button>
+          <button id="btnDrive" class="link">Abrir carpeta en Google Drive</button>
+        </div>
+      </aside>
+
+      <div class="resultados">
+        <div class="res-cab">
+          <button id="btnTemas" class="sec movil-solo">☰ Temas</button>
+          <div id="migas"></div>
+          <div id="conteo"></div>
+        </div>
+        <div id="progreso" class="progreso oculto"><div class="barra-prog"><i></i></div><span></span></div>
+        <div id="grilla" class="grilla"></div>
+        <div id="centinela"></div>
+        <div id="vacio" class="vacio oculto"></div>
+      </div>
+
+      <aside class="pedido">
+        <h2>Pedido <button class="cerrar-panel movil-solo" data-cerrar-panel>×</button></h2>
+        <label>Nombre <span class="req">*</span>
+          <input id="pedCliente" type="text" placeholder="Nombre de quien pide" autocomplete="off">
+        </label>
+        <label>Teléfono (opcional)
+          <input id="pedTelefono" type="text" autocomplete="off">
+        </label>
+        <div class="ped-lista-cab"><span id="pedConteo">Sin diseños</span><button id="pedVaciar" class="link">Vaciar</button></div>
+        <ul id="pedLista" class="ped-lista"></ul>
+        <label>Notas (opcional)
+          <textarea id="pedNotas" rows="2"></textarea>
+        </label>
+        <button id="btnHacerPedido" class="pri grande">Hacer pedido</button>
+      </aside>
+      <div id="velo" class="velo" data-cerrar-panel></div>
+      <button id="btnVerPedido" class="pri movil-solo flotante">Pedido (0)</button>
+    </section>
+
+    <!-- PEDIDOS HECHOS -->
+    <section id="vista-pedidos" class="vista">
+      <div class="pagina">
+        <div class="pag-cab">
+          <h2>Pedidos hechos</h2>
+          <input id="buscarPedido" type="search" placeholder="Buscar por nombre, n.º de pedido o código…">
+        </div>
+        <table class="tabla">
+          <thead><tr><th>N.º</th><th>Fecha</th><th>Nombre</th><th>Diseños</th><th>Unidades</th><th></th></tr></thead>
+          <tbody id="tablaPedidos"></tbody>
+        </table>
+        <div id="sinPedidos" class="vacio oculto">Todavía no hay pedidos.</div>
+      </div>
+    </section>
+
+    <!-- CONFIGURACIÓN -->
+    <section id="vista-config" class="vista">
+      <div class="pagina angosta">
+        <h2>Configuración</h2>
+        <label>Nombre del negocio (sale en el PDF)
+          <input id="cfgNegocio" type="text">
+        </label>
+        <label>Número de WhatsApp que recibe los pedidos
+          <input id="cfgWhatsapp" type="text" placeholder="Ej. 506 8888 8888 (con código de país)">
+          <small>Si se deja vacío, WhatsApp se abre para elegir el contacto.</small>
+        </label>
+        <label class="solo-escritorio">Carpeta del catálogo en Google Drive
+          <input id="cfgDrive" type="text">
+          <small>La carpeta debe estar compartida como "Cualquier persona con el enlace". Cada subcarpeta es un tema y el nombre de cada imagen es su código.</small>
+        </label>
+        <div class="fila-botones">
+          <button id="cfgGuardar" class="pri">Guardar</button>
+          <button id="cfgCarpetaPDF" class="sec solo-escritorio">Abrir carpeta de PDFs</button>
+        </div>
+        <div class="caja-movil solo-escritorio">
+          <h3>Enlace para celulares (iPhone y Android)</h3>
+          <p>Envíe este enlace a quien vaya a pedir. Se abre en Safari o Chrome y se instala con "Agregar a pantalla de inicio". El catálogo se actualiza solo cada día.</p>
+          <p><b id="cfgEnlaceWeb"></b></p>
+          <div class="fila-botones">
+            <button id="cfgCopiarEnlace" class="pri">Copiar enlace</button>
+            <button id="cfgAbrirEnlace" class="sec">Abrir</button>
+          </div>
+        </div>
+        <div class="caja-movil solo-escritorio">
+          <h3>Archivo para celular Android (sin internet de por medio)</h3>
+          <p>Genera un solo archivo (CatalogoSublimacion.html) con el catálogo actual. Páselo al celular (por WhatsApp, cable o Drive) y ábralo con Chrome o Safari. Cuando haya diseños nuevos, genérelo otra vez y reemplace el del celular.</p>
+          <button id="cfgMovil" class="pri">Generar archivo para celular</button>
+        </div>
+        <p id="cfgInfoMovil" class="nota-movil"></p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Vista ampliada -->
+  <div id="visor" class="modal oculto">
+    <div class="visor-caja">
+      <button class="cerrar" data-cerrar>×</button>
+      <div class="visor-img"><img id="visorImg" alt=""></div>
+      <div class="visor-pie">
+        <div><div id="visorCodigo" class="v-cod"></div><div id="visorRuta" class="v-ruta"></div></div>
+        <div class="fila-botones">
+          <button id="visorAnt" class="sec">‹</button>
+          <button id="visorSig" class="sec">›</button>
+          <button id="visorDrive" class="sec">Ver original</button>
+          <button id="visorAgregar" class="pri">Agregar al pedido</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pedido listo -->
+  <div id="listo" class="modal oculto">
+    <div class="dialogo">
+      <h3>✔ Pedido <span id="listoNum"></span> creado</h3>
+      <p id="listoTexto"></p>
+      <div id="listoPDF" class="pdf-arrastre">
+        <div class="pdf-ico">PDF</div>
+        <div><b id="listoArchivo"></b><small class="solo-escritorio">Puede arrastrar este archivo a la conversación de WhatsApp</small></div>
+      </div>
+      <ol class="pasos" id="listoPasos">
+        <li>En WhatsApp, abra la conversación (ya va el resumen escrito).</li>
+        <li>Presione <b>Ctrl + V</b> en el chat para pegar el PDF, o arrástrelo desde aquí.</li>
+        <li>Presione <b>Enviar</b>.</li>
+      </ol>
+      <div class="fila-botones">
+        <button id="listoCompartir" class="pri grande solo-web">Enviar por WhatsApp</button>
+        <button id="listoAbrir" class="sec">Ver PDF</button>
+        <button id="listoDescargar" class="sec solo-web">Descargar PDF</button>
+        <button id="listoCopiar" class="sec solo-escritorio">Copiar PDF otra vez</button>
+        <button id="listoWhats" class="sec solo-escritorio">Abrir WhatsApp otra vez</button>
+        <button data-cerrar class="pri">Listo</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Avisos y preguntas -->
+  <div id="aviso" class="modal oculto">
+    <div class="dialogo chico">
+      <p id="avisoTexto"></p>
+      <div class="fila-botones derecha">
+        <button id="avisoNo" class="sec">Cancelar</button>
+        <button id="avisoSi" class="pri">Aceptar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="espera" class="modal oculto"><div class="dialogo chico centro"><div class="giro"></div><p id="esperaTexto">Generando PDF…</p></div></div>
+  <div id="toast" class="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

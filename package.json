@@ -1,0 +1,57 @@
+{
+  "name": "catalogo-sublimacion",
+  "productName": "Catalogo Sublimacion",
+  "version": "1.1.0",
+  "description": "Catálogo de diseños de sublimación (Google Drive) con búsqueda por tema o código y pedidos en PDF por WhatsApp",
+  "main": "main.js",
+  "author": "Diana",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder",
+    "movil": "node movil.js"
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.1.8",
+    "jspdf": "^2.5.2"
+  },
+  "build": {
+    "appId": "com.diana.catalogosublimacion",
+    "productName": "Catalogo Sublimacion",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "drive.js",
+      "pdf.js",
+      "movil.js",
+      "src/**/*",
+      "build/icon.png",
+      "build/pdf.png",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "icon": "build/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Catálogo Sublimación",
+      "artifactName": "CatalogoSublimacion-Instalador-${version}.${ext}"
+    },
+    "portable": {
+      "artifactName": "CatalogoSublimacion-Portable-${version}.${ext}"
+    }
+  }
+}

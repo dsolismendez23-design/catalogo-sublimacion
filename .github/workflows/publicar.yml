@@ -1,0 +1,58 @@
+# Publica el catálogo en GitHub Pages y lo actualiza todos los días con lo que haya en Google Drive.
+name: Publicar catálogo
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '0 11 * * *'   # todos los días a las 5:00 a. m. (hora de Costa Rica)
+  workflow_dispatch:        # botón "Run workflow" para actualizar al momento
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Leer Google Drive y armar la página
+        run: node movil.js --drive --web publicar --lista datos/codigos.tsv
+
+      # Guarda la lista de códigos solo si cambió. GitHub apaga las tareas diarias de un repositorio
+      # sin cambios por 60 días, así que si pasan 45 días sin cambios se deja una marca para mantenerla viva.
+      - name: Guardar lista de códigos
+        run: |
+          git config user.name "Catálogo automático"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add datos/codigos.tsv
+          if ! git diff --cached --quiet; then
+            git commit -m "Catálogo actualizado desde Google Drive"
+            git push
+          elif [ $(( $(date +%s) - $(git log -1 --format=%ct) )) -gt $((45*24*3600)) ]; then
+            git commit --allow-empty -m "Revisión del catálogo sin cambios"
+            git push
+          fi
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: publicar
+
+      - id: deploy
+        uses: actions/deploy-pages@v4
