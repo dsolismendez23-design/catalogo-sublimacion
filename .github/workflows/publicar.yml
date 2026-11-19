@@ -42,10 +42,10 @@ jobs:
           git add datos/codigos.tsv
           if ! git diff --cached --quiet; then
             git commit -m "Catálogo actualizado desde Google Drive"
-            git push
+            git pull --rebase -q && git push
           elif [ $(( $(date +%s) - $(git log -1 --format=%ct) )) -gt $((45*24*3600)) ]; then
             git commit --allow-empty -m "Revisión del catálogo sin cambios"
-            git push
+            git pull --rebase -q && git push
           fi
 
       - uses: actions/configure-pages@v5
