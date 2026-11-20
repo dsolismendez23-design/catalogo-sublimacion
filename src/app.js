@@ -474,9 +474,20 @@ function mostrarListo(p, formato, r) {
   $('#listoIco').className = `doc-ico ${formato}`;
   $('#listoIco').textContent = formato === 'xlsx' ? 'XLS' : 'PDF';
   $('#listoClientes').textContent = `Clientes: ${window.Documentos.nombresClientes(p)}`;
-  if (WEB) {
+  if (WEB && window.api.puedeCompartir(p.numero, formato)) {
     $('#listoTexto').textContent = `El ${nombre} está listo. Presione "Enviar por WhatsApp", elija WhatsApp en el menú de compartir y luego el chat.`;
     $('#listoPasos').classList.add('oculto');
+    $('#listoCompartir').textContent = 'Enviar por WhatsApp';
+  } else if (WEB) {
+    // Chrome en Android no deja compartir archivos Excel (solo PDF, imágenes, audio, video y texto):
+    // se descarga el archivo y se abre WhatsApp para adjuntarlo desde Descargas
+    $('#listoTexto').textContent = `Este celular no deja pasar el ${nombre} directo a WhatsApp, pero se envía en dos toques:`;
+    $('#listoPasos').innerHTML = `
+      <li>Presione <b>Descargar y abrir WhatsApp</b>: el archivo queda en <b>Descargas</b> y se abre WhatsApp con el resumen.</li>
+      <li>Elija el chat. Toque el clip <b>📎</b> → <b>Documento</b> y escoja <b>${esc(r.archivo)}</b> (sale de primero en Recientes).</li>
+      <li>Presione <b>Enviar</b>.</li>`;
+    $('#listoPasos').classList.remove('oculto');
+    $('#listoCompartir').textContent = 'Descargar y abrir WhatsApp';
   } else if (r.via) {
     $('#listoTexto').textContent = (r.via === 'web'
       ? 'Se abrió WhatsApp Web en el navegador con el resumen del pedido. '
@@ -492,7 +503,7 @@ $('#listoCompartir').onclick = async () => {
   const r = await window.api.compartir(ultimo.pedido.numero, ultimo.formato);
   if (r.via === 'compartido') { $('#listo').classList.add('oculto'); toast('Pedido compartido'); }
   if (r.via === 'pendiente') toast('Toque "Enviar por WhatsApp" otra vez');
-  if (r.via === 'descargado') aviso('Este navegador no permite compartir este archivo. Se descargó y se abrió WhatsApp: adjúntelo desde Descargas (clip 📎 → Documento).');
+  if (r.via === 'descargado') toast('Archivo en Descargas: adjúntelo en WhatsApp con 📎 → Documento');
 };
 $('#listoDescargar').onclick = () => window.api.descargarArchivo(ultimo.pedido.numero, ultimo.formato);
 $('#listoAbrir').onclick = () => window.api.abrirArchivo(ultimo.pedido.numero, ultimo.formato);

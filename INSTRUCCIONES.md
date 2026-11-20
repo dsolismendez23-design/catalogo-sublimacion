@@ -60,6 +60,7 @@ Las miniaturas que ya se vieron quedan guardadas en la computadora y cargan más
    - le pone número consecutivo y lo guarda en `Documentos\Pedidos Sublimacion`;
    - en Windows lo deja **copiado** y abre WhatsApp con el resumen de cada cliente: en el chat presione **Ctrl + V** y **Enviar**;
    - en el celular muestra **Enviar por WhatsApp**: elija WhatsApp en el menú Compartir y el archivo va adjunto.
+   - **Excel en Android:** Chrome no deja pasar archivos Excel por el menú Compartir (solo PDF, imágenes, audio, video y texto). Ahí el botón dice **Descargar y abrir WhatsApp**: el Excel queda en Descargas y se abre WhatsApp con el resumen. En el chat toque 📎 → **Documento**, escoja el archivo (sale de primero en Recientes) y **Enviar**. En iPhone el Excel sí se comparte directo.
 
 WhatsApp no deja que otro programa envíe archivos solo: el último clic de Enviar siempre lo hace la persona.
 En **Pedidos hechos**, *Abrir* y *Enviar por WhatsApp* vuelven a preguntar el formato, así que un pedido hecho en PDF se puede mandar después en Excel (o al revés).

@@ -77,6 +77,11 @@
       return { via: 'listo', archivo: nombre };
     },
     compartir,
+    // ¿El menú Compartir del celular acepta este archivo? (Chrome en Android no acepta Excel)
+    puedeCompartir: (numero, formato) => {
+      const g = archivos.get(`${numero}.${formato}`);
+      try { return !!(g && navigator.canShare && navigator.canShare({ files: [g.archivo] })); } catch { return false; }
+    },
     abrirArchivo: async (numero, formato) => {
       const g = archivos.get(`${numero}.${formato}`);
       if (!g) return;
