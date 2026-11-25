@@ -18,6 +18,25 @@
     leerCatalogo: async () => expandirCatalogo(),
     actualizarCatalogo: async () => ({ ok: false, error: 'En el celular el catálogo viene dentro de la página.' }),
     alProgreso: () => {},
+    // Comparte solo la imagen (sin enlace a la página). El menú Compartir exige un toque reciente: si la imagen
+    // tardó en prepararse, el celular lo rechaza y la persona toca otra vez (ya con la imagen lista).
+    compartirImagen: async (archivo, texto) => {
+      if (navigator.canShare && navigator.canShare({ files: [archivo] })) {
+        try {
+          await navigator.share({ files: [archivo], text: texto });
+          return { via: 'compartido' };
+        } catch (e) {
+          if (e.name === 'AbortError') return { via: 'cancelado' };
+          if (e.name === 'NotAllowedError') return { via: 'pendiente' };
+        }
+      }
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(archivo);
+      a.download = archivo.name;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 60000);
+      return { via: 'descargado' };
+    },
     abrirDrive: async (id) => { window.open(id ? `https://drive.google.com/file/d/${id}/view` : ENLACE_DRIVE, '_blank'); },
   };
 })();

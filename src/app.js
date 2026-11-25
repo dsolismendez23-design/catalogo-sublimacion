@@ -239,10 +239,58 @@ function abrirVisor(idx) {
   $('#visorAnt').disabled = idx <= 0;
   $('#visorSig').disabled = idx >= resultado.length - 1;
   $('#visor').classList.remove('oculto');
+  imagenParaCompartir(d).catch(() => {}); // se deja lista para que "Compartir" responda al instante
 }
 $('#visorAnt').onclick = () => abrirVisor(visorIdx - 1);
 $('#visorSig').onclick = () => abrirVisor(visorIdx + 1);
 $('#visorDrive').onclick = () => window.api.abrirDrive(resultado[visorIdx].id);
+
+// ---------- Compartir un diseño ----------
+// Se comparte solo la imagen con su código (sin el enlace de la página). El código va impreso en una franja
+// debajo de la imagen, porque WhatsApp en Android a veces descarta el texto que acompaña a una foto.
+const imagenesListas = new Map(); // id → Promise<File>
+function imagenParaCompartir(d) {
+  if (!imagenesListas.has(d.id)) {
+    const p = (async () => {
+      const r = await fetch(mini(d.id, 1200));
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      const bmp = await createImageBitmap(await r.blob());
+      const banda = Math.round(Math.max(56, Math.min(bmp.width, bmp.height) * 0.09));
+      const c = document.createElement('canvas');
+      c.width = bmp.width; c.height = bmp.height + banda;
+      const x = c.getContext('2d');
+      x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height);
+      x.drawImage(bmp, 0, 0);
+      x.fillStyle = '#7b3fa0'; x.fillRect(0, bmp.height, c.width, banda);
+      x.fillStyle = '#fff';
+      x.font = `bold ${Math.round(banda * 0.5)}px "Segoe UI", Roboto, Arial, sans-serif`;
+      x.textAlign = 'center'; x.textBaseline = 'middle';
+      x.fillText(`Código ${d.codigo}`, c.width / 2, bmp.height + banda / 2, c.width - 20);
+      const blob = await new Promise((ok) => c.toBlob(ok, 'image/jpeg', 0.9));
+      return new File([blob], `Codigo ${d.codigo.replace(/[^\w-]+/g, '_')}.jpg`, { type: 'image/jpeg' });
+    })();
+    p.catch(() => imagenesListas.delete(d.id)); // si falló (sin internet), se reintenta en el próximo toque
+    imagenesListas.set(d.id, p);
+  }
+  return imagenesListas.get(d.id);
+}
+
+$('#visorCompartir').onclick = async () => {
+  const d = resultado[visorIdx];
+  const btn = $('#visorCompartir');
+  btn.disabled = true;
+  try {
+    const archivo = await imagenParaCompartir(d);
+    const r = await window.api.compartirImagen(archivo, `Código ${d.codigo}`);
+    if (r.via === 'pendiente') toast('Imagen lista: toque "Compartir por WhatsApp" otra vez');
+    if (r.via === 'descargado') toast('Este navegador no deja compartir: la imagen quedó en Descargas');
+    if (r.via === 'copiado') toast('Imagen copiada: en WhatsApp péguela con Ctrl + V');
+  } catch {
+    aviso('No se pudo preparar la imagen. Revise la conexión a internet e inténtelo de nuevo.');
+  } finally {
+    btn.disabled = false;
+  }
+};
 document.addEventListener('keydown', (e) => {
   if ($('#visor').classList.contains('oculto')) return;
   if (e.key === 'Escape') $('#visor').classList.add('oculto');

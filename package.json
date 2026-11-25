@@ -1,7 +1,7 @@
 {
   "name": "catalogo-sublimacion",
   "productName": "Catalogo Sublimacion",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Catálogo de diseños de sublimación (Google Drive) para consultar por tema o código",
   "main": "main.js",
   "author": "Diana",

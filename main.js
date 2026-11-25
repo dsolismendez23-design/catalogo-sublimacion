@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, shell, protocol, net } = require('electron');
+const { app, BrowserWindow, ipcMain, shell, protocol, net, clipboard, nativeImage } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const drive = require('./drive');
@@ -56,7 +56,8 @@ function registrarMiniaturas() {
     if (!/^[\w-]+$/i.test(id)) return new Response('', { status: 400 });
     try {
       const buf = await miniatura(id, sz);
-      return new Response(buf, { headers: { 'content-type': 'image/jpeg' } });
+      // La pantalla lee la imagen con fetch para armar la versión con código al compartir: necesita permiso CORS
+      return new Response(buf, { headers: { 'content-type': 'image/jpeg', 'access-control-allow-origin': '*' } });
     } catch {
       return new Response('', { status: 404 });
     }
@@ -140,6 +141,16 @@ ipcMain.handle('movil:generar', () => {
   const r = generarMovil(cat, path.join(app.getPath('documents'), 'Catalogo Sublimacion celular', 'CatalogoSublimacion.html'));
   shell.showItemInFolder(r.archivo);
   return { archivo: path.basename(r.archivo), disenos: r.disenos };
+});
+
+// Compartir un diseño: la imagen (con su código impreso) queda en el portapapeles y se abre WhatsApp con
+// "Código ####" escrito; en el chat se pega con Ctrl+V. No se envía ningún enlace.
+ipcMain.handle('imagen:compartir', async (_e, bytes, texto) => {
+  clipboard.writeImage(nativeImage.createFromBuffer(Buffer.from(bytes)));
+  const t = encodeURIComponent(texto || '');
+  if (app.getApplicationNameForProtocol('whatsapp://')) await shell.openExternal(`whatsapp://send?text=${t}`);
+  else await shell.openExternal(`https://wa.me/?text=${t}`);
+  return { via: 'copiado' };
 });
 
 ipcMain.handle('drive:abrir', (_e, id) => shell.openExternal(

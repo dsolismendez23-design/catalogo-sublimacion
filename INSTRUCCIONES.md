@@ -1,10 +1,10 @@
 # Catálogo Sublimación — Guía rápida
 
-App **solo para consultar** el catálogo de diseños: búsqueda por código o por tema y vista ampliada de cada diseño. No hace pedidos (desde la versión 2.0.0).
+App **solo para consultar** el catálogo de diseños: búsqueda por código o por tema, vista ampliada y compartir un diseño por WhatsApp (solo la imagen con su código). No hace pedidos (desde la versión 2.0.0).
 
 ## Instalar en la computadora (Windows)
-Ejecute `dist\CatalogoSublimacion-Instalador-2.0.0.exe` (crea ícono en el Escritorio).
-También está `dist\CatalogoSublimacion-Portable-2.0.0.exe`, que se abre sin instalar (sirve para llevar en una memoria USB).
+Ejecute `dist\CatalogoSublimacion-Instalador-2.1.0.exe` (crea ícono en el Escritorio).
+También está `dist\CatalogoSublimacion-Portable-2.1.0.exe`, que se abre sin instalar (sirve para llevar en una memoria USB).
 
 ## Celulares iPhone y Android: enlace publicado (recomendado)
 **https://dsolismendez23-design.github.io/catalogo-sublimacion/**
@@ -44,6 +44,11 @@ Las miniaturas que ya se vieron quedan guardadas en la computadora y cargan más
 - **Por código**: escriba el número en el buscador (`5050`). Para ver varios a la vez, sepárelos con coma (`5050, 5052, 152`).
 - **Por tema**: elija el tema en la lista de la izquierda (en el celular, botón **☰ Temas**) o escriba la palabra (`navidad`, `mickey`, `almohadones`). Se pueden combinar: elija un tema y busque dentro de él.
 - Toque una imagen para verla grande. Con las flechas ‹ › pasa a la siguiente, y **Ver original** la abre en Drive.
+
+## Compartir un diseño por WhatsApp
+En la vista grande, presione **Compartir por WhatsApp**. Se comparte **solo la imagen**, con una franja morada abajo que dice **"Código ####"**, más el texto "Código ####". No se manda ningún enlace a la página.
+- **Celular:** se abre el menú Compartir; elija WhatsApp y el chat. Si la imagen todavía se estaba preparando, la app avisa "toque otra vez" y al segundo toque sale de una vez.
+- **Windows:** la imagen queda copiada y se abre WhatsApp con el código escrito: en el chat presione **Ctrl + V** y **Enviar**.
 
 ## Configuración (solo en Windows)
 - **Carpeta de Google Drive**, por si algún día el catálogo se cambia de carpeta.
