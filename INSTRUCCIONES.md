@@ -11,7 +11,7 @@ También está `dist\CatalogoSublimacion-Portable-1.3.0.exe`, que se abre sin in
 - **iPhone:** abrir el enlace en **Safari** → botón Compartir (cuadro con flecha) → **Agregar a pantalla de inicio**. Queda el ícono "Catálogo".
 - **Android:** abrir en **Chrome** → menú ⋮ → **Agregar a pantalla principal** (o **Instalar app**).
 - Hacer pedido → **Enviar por WhatsApp** → en el menú Compartir elegir WhatsApp y el chat: el PDF va adjunto.
-- **Se actualiza solo**: todos los días a las 5:00 a. m. GitHub lee el Google Drive y publica los diseños nuevos. Para actualizar al momento: en https://github.com/dsolismendez23-design/catalogo-sublimacion/actions → *Publicar catálogo* → **Run workflow**.
+- **Se actualiza solo**: cada 4 horas (6:00 y 10:00 a. m., 2:00 y 6:00 p. m., etc.) GitHub lee el Google Drive y publica los diseños nuevos. GitHub a veces atrasa estas corridas un par de horas. Para actualizar al momento: en https://github.com/dsolismendez23-design/catalogo-sublimacion/actions → *Publicar catálogo* → **Run workflow**.
 - Si GitHub manda un correo diciendo que la tarea se desactivó, entre a esa misma página y presione **Enable workflow**.
 - Es público: cualquiera con el enlace ve el catálogo (las imágenes ya eran públicas en Drive). Los pedidos se guardan solo en cada celular; no quedan en GitHub.
 

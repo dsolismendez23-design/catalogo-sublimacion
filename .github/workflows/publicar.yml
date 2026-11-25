@@ -5,7 +5,7 @@ on:
   push:
     branches: [main]
   schedule:
-    - cron: '0 11 * * *'   # todos los días a las 5:00 a. m. (hora de Costa Rica)
+    - cron: '0 */4 * * *'   # cada 4 horas (6:00, 10:00 a. m., 2:00 p. m.… hora de Costa Rica); si una corrida falla, la siguiente lo corrige
   workflow_dispatch:        # botón "Run workflow" para actualizar al momento
 
 permissions:
