@@ -1,8 +1,8 @@
 {
   "name": "catalogo-sublimacion",
   "productName": "Catalogo Sublimacion",
-  "version": "1.3.0",
-  "description": "Catálogo de diseños de sublimación (Google Drive) con búsqueda por tema o código y pedidos en PDF por WhatsApp",
+  "version": "2.0.0",
+  "description": "Catálogo de diseños de sublimación (Google Drive) para consultar por tema o código",
   "main": "main.js",
   "author": "Diana",
   "license": "UNLICENSED",
@@ -14,9 +14,7 @@
   },
   "devDependencies": {
     "electron": "^33.0.0",
-    "electron-builder": "^25.1.8",
-    "exceljs": "^4.4.0",
-    "jspdf": "^2.5.2"
+    "electron-builder": "^25.1.8"
   },
   "build": {
     "appId": "com.diana.catalogosublimacion",
@@ -32,9 +30,7 @@
       "movil.js",
       "src/**/*",
       "build/icon.png",
-      "build/pdf.png",
-      "package.json",
-      "build/xlsx.png"
+      "package.json"
     ],
     "win": {
       "target": [
