@@ -1,4 +1,4 @@
-// Arma la versión para celular: UN SOLO archivo HTML con la app, jsPDF y el catálogo incrustados,
+// Arma la versión para celular: UN SOLO archivo HTML con la app y el catálogo incrustados,
 // para abrirlo sin internet de por medio para la app (solo las imágenes se bajan de Google Drive).
 // Uso desde la app de Windows (Configuración → Generar archivo para celular) o con `npm run movil`.
 const fs = require('fs');
@@ -33,7 +33,7 @@ const CABECERA_WEB = `
 const MANIFIESTO = {
   name: 'Catálogo Sublimación',
   short_name: 'Catálogo',
-  description: 'Catálogo de diseños de sublimación y pedidos por WhatsApp',
+  description: 'Catálogo de diseños de sublimación para consultar por tema o código',
   lang: 'es',
   start_url: './',
   scope: './',
@@ -62,7 +62,7 @@ function generarMovil(catalogo, archivoDestino, opciones = {}) {
     .replace(/<meta http-equiv="Content-Security-Policy"[^>]*>\s*/, () => '')
     .replace('<link rel="stylesheet" href="styles.css">', () => (opciones.web ? CABECERA_WEB + '\n  ' : '') + `<style>${leer('styles.css')}</style>`)
     .replace('<script src="app.js"></script>', () => antesDeApp + '\n<script src="app.js"></script>')
-    // Cada <script src> (jsPDF, ExcelJS, documentos.js, app.js) se mete dentro del archivo
+    // Cada <script src> (hoy solo app.js) se mete dentro del archivo
     .replace(/<script src="([^"]+)"><\/script>/g, (_, f) => `<script>${seguro(leer(f))}</script>`);
 
   const dir = path.dirname(archivoDestino);
