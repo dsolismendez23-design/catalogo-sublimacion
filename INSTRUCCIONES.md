@@ -1,31 +1,32 @@
 # Catálogo Sublimación — Guía rápida
 
-App **solo para consultar** el catálogo de diseños: búsqueda por código o por tema y vista ampliada de cada diseño. No hace pedidos (desde la versión 2.0.0).
-
 ## Instalar en la computadora (Windows)
-Ejecute `dist\CatalogoSublimacion-Instalador-2.0.0.exe` (crea ícono en el Escritorio).
-También está `dist\CatalogoSublimacion-Portable-2.0.0.exe`, que se abre sin instalar (sirve para llevar en una memoria USB).
+Ejecute `dist\CatalogoSublimacion-Instalador-1.3.0.exe` (crea ícono en el Escritorio).
+También está `dist\CatalogoSublimacion-Portable-1.3.0.exe`, que se abre sin instalar (sirve para llevar en una memoria USB).
 
 ## Celulares iPhone y Android: enlace publicado (recomendado)
 **https://dsolismendez23-design.github.io/catalogo-sublimacion/**
 
-- En la app de Windows: Configuración → **Copiar enlace**, y envíelo por WhatsApp a quien vaya a consultar el catálogo.
+- En la app de Windows: Configuración → **Copiar enlace**, y envíelo por WhatsApp a quien vaya a pedir.
 - **iPhone:** abrir el enlace en **Safari** → botón Compartir (cuadro con flecha) → **Agregar a pantalla de inicio**. Queda el ícono "Catálogo".
 - **Android:** abrir en **Chrome** → menú ⋮ → **Agregar a pantalla principal** (o **Instalar app**).
+- Hacer pedido → **Enviar por WhatsApp** → en el menú Compartir elegir WhatsApp y el chat: el PDF va adjunto.
 - **Se actualiza solo**: cada 4 horas (6:00 y 10:00 a. m., 2:00 y 6:00 p. m., etc.) GitHub lee el Google Drive y publica los diseños nuevos. GitHub a veces atrasa estas corridas un par de horas. Para actualizar al momento: en https://github.com/dsolismendez23-design/catalogo-sublimacion/actions → *Publicar catálogo* → **Run workflow**.
 - Si GitHub manda un correo diciendo que la tarea se desactivó, entre a esa misma página y presione **Enable workflow**.
-- Es público: cualquiera con el enlace ve el catálogo (las imágenes ya eran públicas en Drive).
+- Es público: cualquiera con el enlace ve el catálogo (las imágenes ya eran públicas en Drive). Los pedidos se guardan solo en cada celular; no quedan en GitHub.
 
 ## Archivo para celular Android (sin publicar nada)
-El celular no puede abrir un .exe. La versión para celular es **un solo archivo**: `CatalogoSublimacion.html` (unos 0,3 MB), con la app y todo el catálogo adentro.
+El celular no puede abrir un .exe. La versión para celular es **un solo archivo**: `CatalogoSublimacion.html` (unos 0,7 MB), con la app y todo el catálogo adentro.
 
 1. En la app de la computadora: **Configuración → Generar archivo para celular**. Se crea en `Documentos\Catalogo Sublimacion celular\`.
 2. Páselo al celular: por WhatsApp (a usted misma), con cable USB o por Google Drive.
 3. **Android:** toque el archivo y ábralo con **Chrome**. Para tenerlo a mano, ábralo desde la app *Archivos* (en Descargas) o deje fijado el chat donde lo recibió.
-4. Funciona igual que en la computadora: búsqueda por código o por tema (botón **☰ Temas**).
+4. Funciona igual que en la computadora: búsqueda por código o por tema (botón **☰ Temas**) y el botón morado **Pedido (n)** abajo a la derecha.
+5. **Hacer pedido** arma el PDF dentro del celular. Luego **Enviar por WhatsApp** abre el menú Compartir: elija WhatsApp y el chat, y el PDF va adjunto.
 
 - Las imágenes se ven con internet (datos o wifi), porque se toman del Google Drive.
-- Los diseños nuevos que suban a Drive **no** aparecen solos en este archivo: genérelo otra vez en la computadora y reemplace el del celular.
+- Los diseños nuevos que suban a Drive **no** aparecen solos en el celular: genere el archivo otra vez en la computadora y reemplace el del celular.
+- Los pedidos hechos en el celular se guardan en el navegador del celular. Su numeración es independiente de la de la computadora.
 - **iPhone:** iOS no ejecuta archivos HTML guardados en el teléfono. En iPhone use el enlace publicado (sección anterior).
 
 ## De dónde salen los diseños
@@ -34,27 +35,47 @@ https://drive.google.com/drive/folders/1UswdTNur0HFNMGvHxOR00U9_NrrzANbN
 
 - Cada carpeta y subcarpeta es un **tema** (NAVIDAD › COLECCION 2026 › ALMOHADONES…).
 - El **nombre de la imagen es el código** (`5050.png` → código 5050; `2550 UNICORNIOS.jpg` → código 2550, nombre UNICORNIOS).
-- La carpeta MOCKUPS no se muestra porque no tiene diseños del catálogo.
+- La carpeta MOCKUPS no se muestra porque no tiene diseños para pedir.
 - La carpeta tiene que seguir compartida como "Cualquier persona con el enlace". No hace falta usuario ni contraseña.
 
-Cada vez que se abre la app de Windows, se revisa el Drive en segundo plano (tarda unos 40 segundos) para traer los diseños nuevos. Mientras tanto se usa la copia guardada, así que se puede consultar de una vez. El botón **Actualizar catálogo** hace lo mismo a mano.
+Cada vez que se abre la app, se revisa el Drive en segundo plano (tarda unos 40 segundos) para traer los diseños nuevos. Mientras tanto se usa la copia guardada, así que se puede consultar de una vez. El botón **Actualizar catálogo** hace lo mismo a mano.
 Las miniaturas que ya se vieron quedan guardadas en la computadora y cargan más rápido la siguiente vez.
 
 ## Consultar
 - **Por código**: escriba el número en el buscador (`5050`). Para ver varios a la vez, sepárelos con coma (`5050, 5052, 152`).
-- **Por tema**: elija el tema en la lista de la izquierda (en el celular, botón **☰ Temas**) o escriba la palabra (`navidad`, `mickey`, `almohadones`). Se pueden combinar: elija un tema y busque dentro de él.
-- Toque una imagen para verla grande. Con las flechas ‹ › pasa a la siguiente, y **Ver original** la abre en Drive.
+- **Por tema**: elija el tema en la lista de la izquierda o escriba la palabra (`navidad`, `mickey`, `almohadones`). Se pueden combinar: elija un tema y busque dentro de él.
+- Haga clic en una imagen para verla grande. Con las flechas ‹ › pasa a la siguiente, y **Ver original** la abre en Drive.
 
-## Configuración (solo en Windows)
+## Hacer un pedido (uno o varios clientes)
+1. Escriba el **Nombre del cliente** (obligatorio). El teléfono y las notas son opcionales.
+2. Presione **+ Agregar** en cada diseño. En el panel del pedido ajusta la cantidad o quita diseños.
+3. ¿Hay otro cliente en el mismo envío? Presione **+ Agregar otro cliente**: queda guardado el anterior y el panel se limpia para el siguiente. Repítalo las veces que quiera.
+   - Arriba del panel aparece una pestaña por cliente (ej. *1. María (2)*). Tocándola vuelve a ese cliente para cambiar sus diseños o cantidades; con la **×** se quita del pedido.
+   - Las marcas "✓ En el pedido" del catálogo son las del cliente que está abierto.
+4. Presione **Enviar pedido** y elija el formato:
+   - **PDF**: para ver e imprimir. Trae cada cliente con sus imágenes y, al final, el resumen con el total de cada cliente y el total general.
+   - **Excel**: para editar y sumar. Hoja *Pedido* (cada cliente con imágenes y su total), hoja *Resumen* (diseños y unidades por cliente) y hoja *Detalle* (todas las líneas en una tabla con filtros).
+   La app recuerda el último formato elegido y lo resalta la próxima vez.
+5. Un solo archivo lleva a todos los clientes. La app:
+   - le pone número consecutivo y lo guarda en `Documentos\Pedidos Sublimacion`;
+   - en Windows lo deja **copiado** y abre WhatsApp con el resumen de cada cliente: en el chat presione **Ctrl + V** y **Enviar**;
+   - en el celular muestra **Enviar por WhatsApp**: elija WhatsApp en el menú Compartir y el archivo va adjunto.
+   - **Excel en Android:** Chrome no deja pasar archivos Excel por el menú Compartir (solo PDF, imágenes, audio, video y texto). Ahí el botón dice **Descargar y abrir WhatsApp**: el Excel queda en Descargas y se abre WhatsApp con el resumen. En el chat toque 📎 → **Documento**, escoja el archivo (sale de primero en Recientes) y **Enviar**. En iPhone el Excel sí se comparte directo.
+
+WhatsApp no deja que otro programa envíe archivos solo: el último clic de Enviar siempre lo hace la persona.
+En **Pedidos hechos**, *Abrir* y *Enviar por WhatsApp* vuelven a preguntar el formato, así que un pedido hecho en PDF se puede mandar después en Excel (o al revés).
+
+## Configuración
+- **Número de WhatsApp** que recibe los pedidos, con código de país (ej. `506 8888 8888`). Si se deja vacío, WhatsApp se abre para que usted elija el contacto.
+- **Nombre del negocio** que sale en el encabezado del PDF.
 - **Carpeta de Google Drive**, por si algún día el catálogo se cambia de carpeta.
-- **Enlace para celulares**, para copiarlo y enviarlo.
-- **Generar archivo para celular** (Android, sin publicar nada).
+
+## Pedidos hechos
+Lista de todos los pedidos, con búsqueda por nombre, número o código. Desde ahí se puede abrir el PDF otra vez o volver a enviarlo por WhatsApp.
 
 ## Datos
-`%APPDATA%\Catalogo Sublimacion`: catalogo.json (copia del índice del Drive), config.json y miniaturas\.
-Los pedidos hechos con versiones anteriores (1.x) siguen guardados en `pedidos.json` y en `Documentos\Pedidos Sublimacion`; la app ya no los usa, pero no se borraron.
+`%APPDATA%\Catalogo Sublimacion`: catalogo.json (copia del índice del Drive), config.json, pedidos.json y miniaturas\.
 
 ## Para programar
 `npm start` abre la app; `npm run dist` genera los .exe en `dist\`; `npm run movil` genera `celular\CatalogoSublimacion.html` con el catálogo guardado (`npm run movil -- --drive` lo lee del Drive primero).
-El código de la pantalla (`src\`) es el mismo para las dos versiones: en Windows lo conecta `preload.js` y en el celular `src\api-web.js` (catálogo incrustado, imágenes directo de Google). `movil.js` mete todo en un solo HTML.
-La versión con pedidos (varios clientes, PDF/Excel por WhatsApp) quedó en el historial de git hasta el commit "Excel en Android" (versión 1.3.0).
+El código de la pantalla (`src\`) es el mismo para las dos versiones: en Windows lo conecta `preload.js` y en el celular `src\api-web.js` (catálogo incrustado, Compartir del navegador). El PDF (jsPDF) y el Excel (ExcelJS) los arma `src\documentos.js` en las dos versiones; Windows solo guarda el archivo, lo copia y abre WhatsApp. `movil.js` mete todo en un solo HTML.

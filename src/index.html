@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#7b3fa0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' miniatura: data:; style-src 'self' 'unsafe-inline'; script-src 'self'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' miniatura: data: blob:; connect-src 'self' miniatura:; style-src 'self' 'unsafe-inline'; script-src 'self'">
   <title>Catálogo Sublimación</title>
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -17,9 +17,9 @@
     <div class="buscador">
       <input id="buscar" type="search" placeholder="Buscar código o tema (ej. 5050, navidad)…" autocomplete="off">
     </div>
-    <!-- En el celular no hay nada que configurar: las pestañas solo existen en Windows -->
-    <nav class="pestanas solo-escritorio">
+    <nav class="pestanas">
       <button data-vista="catalogo" class="activa">Catálogo</button>
+      <button data-vista="pedidos">Pedidos hechos</button>
       <button data-vista="config">Configuración</button>
     </nav>
   </header>
@@ -47,34 +47,78 @@
         <div id="centinela"></div>
         <div id="vacio" class="vacio oculto"></div>
       </div>
+
+      <aside class="pedido">
+        <h2>Pedido <button class="cerrar-panel movil-solo" data-cerrar-panel>×</button></h2>
+        <div id="clientesTabs" class="clientes-tabs"></div>
+        <label>Nombre del cliente <span class="req">*</span>
+          <input id="pedCliente" type="text" placeholder="Nombre del cliente" autocomplete="off">
+        </label>
+        <label>Teléfono (opcional)
+          <input id="pedTelefono" type="text" autocomplete="off">
+        </label>
+        <div class="ped-lista-cab"><span id="pedConteo">Sin diseños</span><button id="pedVaciar" class="link">Vaciar</button></div>
+        <ul id="pedLista" class="ped-lista"></ul>
+        <label>Notas (opcional)
+          <textarea id="pedNotas" rows="2"></textarea>
+        </label>
+        <button id="btnOtroCliente" class="sec ancho">+ Agregar otro cliente</button>
+        <div id="pedResumen" class="ped-resumen"></div>
+        <button id="btnHacerPedido" class="pri grande">Enviar pedido</button>
+      </aside>
       <div id="velo" class="velo" data-cerrar-panel></div>
+      <button id="btnVerPedido" class="pri movil-solo flotante">Pedido (0)</button>
     </section>
 
-    <!-- CONFIGURACIÓN (solo Windows) -->
+    <!-- PEDIDOS HECHOS -->
+    <section id="vista-pedidos" class="vista">
+      <div class="pagina">
+        <div class="pag-cab">
+          <h2>Pedidos hechos</h2>
+          <input id="buscarPedido" type="search" placeholder="Buscar por nombre, n.º de pedido o código…">
+        </div>
+        <table class="tabla">
+          <thead><tr><th>N.º</th><th>Fecha</th><th>Clientes</th><th>Diseños</th><th>Unidades</th><th></th></tr></thead>
+          <tbody id="tablaPedidos"></tbody>
+        </table>
+        <div id="sinPedidos" class="vacio oculto">Todavía no hay pedidos.</div>
+      </div>
+    </section>
+
+    <!-- CONFIGURACIÓN -->
     <section id="vista-config" class="vista">
       <div class="pagina angosta">
         <h2>Configuración</h2>
-        <label>Carpeta del catálogo en Google Drive
+        <label>Nombre del negocio (sale en el PDF)
+          <input id="cfgNegocio" type="text">
+        </label>
+        <label>Número de WhatsApp que recibe los pedidos
+          <input id="cfgWhatsapp" type="text" placeholder="Ej. 506 8888 8888 (con código de país)">
+          <small>Si se deja vacío, WhatsApp se abre para elegir el contacto.</small>
+        </label>
+        <label class="solo-escritorio">Carpeta del catálogo en Google Drive
           <input id="cfgDrive" type="text">
           <small>La carpeta debe estar compartida como "Cualquier persona con el enlace". Cada subcarpeta es un tema y el nombre de cada imagen es su código.</small>
         </label>
         <div class="fila-botones">
           <button id="cfgGuardar" class="pri">Guardar</button>
+          <button id="cfgCarpetaPDF" class="sec solo-escritorio">Abrir carpeta de pedidos</button>
         </div>
-        <div class="caja-movil">
+        <div class="caja-movil solo-escritorio">
           <h3>Enlace para celulares (iPhone y Android)</h3>
-          <p>Envíe este enlace a quien vaya a consultar el catálogo. Se abre en Safari o Chrome y se instala con "Agregar a pantalla de inicio". El catálogo se actualiza solo varias veces al día.</p>
+          <p>Envíe este enlace a quien vaya a pedir. Se abre en Safari o Chrome y se instala con "Agregar a pantalla de inicio". El catálogo se actualiza solo cada día.</p>
           <p><b id="cfgEnlaceWeb"></b></p>
           <div class="fila-botones">
             <button id="cfgCopiarEnlace" class="pri">Copiar enlace</button>
             <button id="cfgAbrirEnlace" class="sec">Abrir</button>
           </div>
         </div>
-        <div class="caja-movil">
-          <h3>Archivo para celular Android (sin publicar nada)</h3>
-          <p>Genera un solo archivo (CatalogoSublimacion.html) con el catálogo actual. Páselo al celular (por WhatsApp, cable o Drive) y ábralo con Chrome. Cuando haya diseños nuevos, genérelo otra vez y reemplace el del celular.</p>
+        <div class="caja-movil solo-escritorio">
+          <h3>Archivo para celular Android (sin internet de por medio)</h3>
+          <p>Genera un solo archivo (CatalogoSublimacion.html) con el catálogo actual. Páselo al celular (por WhatsApp, cable o Drive) y ábralo con Chrome o Safari. Cuando haya diseños nuevos, genérelo otra vez y reemplace el del celular.</p>
           <button id="cfgMovil" class="pri">Generar archivo para celular</button>
         </div>
+        <p id="cfgInfoMovil" class="nota-movil"></p>
       </div>
     </section>
   </main>
@@ -90,7 +134,46 @@
           <button id="visorAnt" class="sec">‹</button>
           <button id="visorSig" class="sec">›</button>
           <button id="visorDrive" class="sec">Ver original</button>
+          <button id="visorAgregar" class="pri">Agregar al pedido</button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Formato del archivo -->
+  <div id="formato" class="modal oculto">
+    <div class="dialogo chico">
+      <h3 class="neutro">¿En qué formato envía el pedido?</h3>
+      <p id="formatoResumen" class="suave"></p>
+      <div class="formatos">
+        <button data-formato="pdf" class="formato-btn"><span class="doc-ico pdf">PDF</span><b>PDF</b><small>Para ver e imprimir</small></button>
+        <button data-formato="xlsx" class="formato-btn"><span class="doc-ico xlsx">XLS</span><b>Excel</b><small>Para editar y sumar</small></button>
+      </div>
+      <div class="fila-botones derecha"><button data-cancelar class="sec">Cancelar</button></div>
+    </div>
+  </div>
+
+  <!-- Pedido listo -->
+  <div id="listo" class="modal oculto">
+    <div class="dialogo">
+      <h3>✔ Pedido <span id="listoNum"></span> creado</h3>
+      <p id="listoTexto"></p>
+      <div id="listoPDF" class="pdf-arrastre">
+        <div id="listoIco" class="doc-ico pdf">PDF</div>
+        <div><b id="listoArchivo"></b><small class="solo-escritorio">Puede arrastrar este archivo a la conversación de WhatsApp</small><small id="listoClientes"></small></div>
+      </div>
+      <ol class="pasos" id="listoPasos">
+        <li>En WhatsApp, abra la conversación (ya va el resumen escrito).</li>
+        <li>Presione <b>Ctrl + V</b> en el chat para pegar el archivo, o arrástrelo desde aquí.</li>
+        <li>Presione <b>Enviar</b>.</li>
+      </ol>
+      <div class="fila-botones">
+        <button id="listoCompartir" class="pri grande solo-web">Enviar por WhatsApp</button>
+        <button id="listoAbrir" class="sec">Abrir archivo</button>
+        <button id="listoDescargar" class="sec solo-web">Descargar</button>
+        <button id="listoCopiar" class="sec solo-escritorio">Copiar archivo otra vez</button>
+        <button id="listoWhats" class="sec solo-escritorio">Abrir WhatsApp otra vez</button>
+        <button data-cerrar class="pri">Listo</button>
       </div>
     </div>
   </div>
@@ -106,9 +189,12 @@
     </div>
   </div>
 
-  <div id="espera" class="modal oculto"><div class="dialogo chico centro"><div class="giro"></div><p id="esperaTexto">Un momento…</p></div></div>
+  <div id="espera" class="modal oculto"><div class="dialogo chico centro"><div class="giro"></div><p id="esperaTexto">Generando el archivo…</p></div></div>
   <div id="toast" class="toast"></div>
 
+  <script src="vendor/jspdf.umd.min.js"></script>
+  <script src="vendor/exceljs.min.js"></script>
+  <script src="documentos.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
